@@ -1,0 +1,10 @@
+{
+    "name": "mmdviewer",
+    "dockerFile":"Dockerfile",
+    "remoteUser": "node",
+    "settings": {
+        "terminal.integrated.shell.linux": "/bin/bash"
+    },
+    "postCreateCommand": "yarn install",
+    "forwardPorts": [8888]
+}
