@@ -1,5 +1,5 @@
 {
-    "name": "mmdviewer",
+    "name": "uzimaru",
     "dockerFile":"Dockerfile",
     "remoteUser": "node",
     "settings": {
