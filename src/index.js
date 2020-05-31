@@ -76,6 +76,7 @@ const generateObject = () => {
     console.log("generateObject");
     let obj = uzimalMesh.clone();
     obj.position.set(reticle.position.x, reticle.position.y + uzimalHeight / 2, reticle.position.z);
+    objects.push(obj);
     scene.add(obj);
     if (objects.length > MAX_OBJECT) {
         let o = objects.shift();
