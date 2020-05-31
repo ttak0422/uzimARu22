@@ -13,15 +13,20 @@ module.exports = {
         rules: [
             {
                 test: /\.js$/,
+                use: [
+                    {
+                        loader: "babel-loader",
+                    }
+                ]
             },
             {
                 test: /\.(png|jpe?g)$/,
                 loader: "file-loader",
                 options: {
                     name(path, query) {
-                        if(process.env.NODE_ENV === "development") 
+                        if (process.env.NODE_ENV === "development")
                             return "[path][name].[ext]";
-                        else 
+                        else
                             return "[contenthash].[ext]";
                     },
                 },
