@@ -2,16 +2,13 @@ import * as THREE from "three"
 import { ARButton } from "./lib/ar-button";
 import { loadTextureAsync } from "./lib/texture-loader";
 import uzimalSrc from "./img/uzimaru.png";
+import shadowSrc from "./img/shadow.png";
 import "./style.css"
-
-// TODO: 
-// [ ] 設置したオブジェクトの向き
-// [ ] shadow
 
 // three
 let renderer, camera, light, reticle, scene;
-let uzimalMesh;
-const uzimalHeight = 0.1;
+let object;
+const objectSize = 0.1;
 let objects = [];
 const MAX_OBJECT = 10;
 
@@ -52,8 +49,9 @@ const startTHREE = async () => {
     reticle = new THREE.Mesh(reticleGeometry, reticleMaterial);
     reticle.rotation.set(-Math.PI / 2, 0, 0);
     reticle.visible = false;
-    // object
+    /// uzimal
     const uzimalTexture = await loadTextureAsync(uzimalSrc);
+    const uzimalHeight = objectSize;
     const uzimalWidth = uzimalHeight * (uzimalTexture.image.width / uzimalTexture.image.height);
     const uzimalGeometry = new THREE.PlaneGeometry(uzimalWidth, uzimalHeight);
     const uzimalMaterial = new THREE.MeshBasicMaterial({
@@ -61,7 +59,25 @@ const startTHREE = async () => {
         transparent: true,
         side: THREE.DoubleSide,
     });
-    uzimalMesh = new THREE.Mesh(uzimalGeometry, uzimalMaterial);
+    const uzimalMesh = new THREE.Mesh(uzimalGeometry, uzimalMaterial);
+    uzimalMesh.position.y = uzimalHeight / 2;
+    /// shadow
+    const shadowTexture = await loadTextureAsync(shadowSrc);
+    const shadowSize = objectSize * 2;
+    const shadowGeometry = new THREE.PlaneBufferGeometry(shadowSize,shadowSize);
+    const shadowMaterial = new THREE.MeshBasicMaterial({
+        map: shadowTexture,
+        transparent: true,
+        depthWrite: false,
+    });
+    const shadowMesh = new THREE.Mesh(shadowGeometry, shadowMaterial);
+    shadowMesh.position.y = 0.01;
+    shadowMesh.rotation.x = Math.PI * -0.5;
+    // object
+    object = new THREE.Object3D();
+    object.add(uzimalMesh);
+    object.add(shadowMesh);
+
     // scene
     scene = new THREE.Scene();
     scene.add(light);
@@ -93,8 +109,8 @@ const onSelect = () => {
 
 const generateObject = () => {
     console.log("generateObject");
-    let obj = uzimalMesh.clone();
-    obj.position.set(reticle.position.x, reticle.position.y + uzimalHeight / 2, reticle.position.z);
+    let obj = object.clone();
+    obj.position.set(reticle.position.x, reticle.position.y, reticle.position.z);
     objects.push(obj);
     scene.add(obj);
     if (objects.length > MAX_OBJECT) {
@@ -114,7 +130,6 @@ const onRequestSession = () =>
 
 const onStartSession = (session) => {
     overlayElement.style.display = "block";
-    // session.addEventListener('select', onSelect);
     // three
     renderer.xr.enabled = true;
     renderer.xr.setReferenceSpaceType("local");
