@@ -10,7 +10,7 @@ const Status = {
 }
 
 const DefaultOptions = {
-    buttonStyle : "width: 50%; height: 10%; position: absolute; left: 25%; buttom: 5%;",
+    buttonStyle : "width: 50%; height: 10%; position: absolute; left: 25%; bottom: 5%;",
     textStyle : "font-size: 5em;",
     buttonText : "Tap to Start",
     onRequestSession: (() => console.log("onRequestSesssion")),
