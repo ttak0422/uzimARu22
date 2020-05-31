@@ -1,12 +1,16 @@
 import * as THREE from "three"
 import { ARButton } from "./lib/ar-button";
+import { loadTextureAsync } from "./lib/texture-loader";
+import uzimalSrc from "./img/uzimaru.png";
 
 // three
-let renderer, camera, light, reticle, object, scene;
+let renderer, camera, light, reticle, scene;
+let uzimalMesh;
+const uzimalHeight = 0.1;
 let objects = [];
 const MAX_OBJECT = 10;
 
-const startTHREE = () => {
+const startTHREE = async () => {
     const w = window.innerWidth;
     const h = window.innerHeight;
     // renderer
@@ -30,13 +34,17 @@ const startTHREE = () => {
     reticle.rotation.set(-Math.PI / 2, 0, 0);
     reticle.visible = false;
     // object
-    // TODO: uzimalにする
-    const objectRadius = 0.1;
-    const objectWidithRevisions = 32;
-    const objectHeightRevisions = 16;
-    const objectGeometry = new THREE.SphereBufferGeometry(objectRadius, objectWidithRevisions, objectHeightRevisions);
-    const objectMaterial = new THREE.MeshPhongMaterial();
-    object = new THREE.Mesh(objectGeometry, objectMaterial);
+    const uzimalTexture = await loadTextureAsync(uzimalSrc);
+    const uzimalWidth = uzimalHeight * (uzimalTexture.image.width / uzimalTexture.image.height);
+    console.log(uzimalTexture);
+    console.log(`w: ${uzimalWidth}, h: ${uzimalHeight}`);
+    const uzimalGeometry = new THREE.PlaneGeometry(uzimalWidth, uzimalHeight);
+    const uzimalMaterial = new THREE.MeshBasicMaterial({
+        map: uzimalTexture,
+        transparent: true, 
+        side: THREE.DoubleSide,
+    });
+    uzimalMesh = new THREE.Mesh(uzimalGeometry, uzimalMaterial);
     // scene
     scene = new THREE.Scene();
     scene.add(light);
@@ -68,8 +76,8 @@ const onSelect = () => {
 
 const generateObject = () => {
     console.log("generateObject");
-    let obj = object.clone();
-    obj.position.set(reticle.position.x, reticle.position.y + 0.05, reticle.position.z);
+    let obj = uzimalMesh.clone();
+    obj.position.set(reticle.position.x, reticle.position.y + uzimalHeight / 2, reticle.position.z);
     scene.add(obj);
     if (objects.length > MAX_OBJECT) {
         let o = objects.shift();
@@ -114,8 +122,8 @@ const onEndSession = () => {
 }
 
 // Entry point
-window.onload = () => {
-    startTHREE();
+window.onload = async () => {
+    await startTHREE();
     const arButton = new ARButton({ onRequestSession });
     document.body.appendChild(arButton);
 }
