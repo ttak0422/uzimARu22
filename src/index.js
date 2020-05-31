@@ -36,8 +36,6 @@ const startTHREE = async () => {
     // object
     const uzimalTexture = await loadTextureAsync(uzimalSrc);
     const uzimalWidth = uzimalHeight * (uzimalTexture.image.width / uzimalTexture.image.height);
-    console.log(uzimalTexture);
-    console.log(`w: ${uzimalWidth}, h: ${uzimalHeight}`);
     const uzimalGeometry = new THREE.PlaneGeometry(uzimalWidth, uzimalHeight);
     const uzimalMaterial = new THREE.MeshBasicMaterial({
         map: uzimalTexture,
