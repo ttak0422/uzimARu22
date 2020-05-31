@@ -20,6 +20,19 @@ module.exports = {
                 ]
             },
             {
+                test: /\.css$/,
+                use: [
+                    "style-loader",
+                    {
+                        loader: "css-loader",
+                        options: { 
+                            // url: false 
+                            sourceMap: false
+                        }
+                    }
+                ]
+            },
+            {
                 test: /\.(png|jpe?g)$/,
                 loader: "file-loader",
                 options: {

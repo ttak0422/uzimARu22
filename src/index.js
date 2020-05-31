@@ -2,13 +2,11 @@ import * as THREE from "three"
 import { ARButton } from "./lib/ar-button";
 import { loadTextureAsync } from "./lib/texture-loader";
 import uzimalSrc from "./img/uzimaru.png";
+import "./style.css"
 
-// overlay
-let overlayElement = document.createElement("div");
-overlayElement.id = "overlay";
-overlayElement.innerHTML = `
-<p>test</p>
-`;
+// TODO: 
+// [ ] 設置したオブジェクトの向き
+// [ ] shadow
 
 // three
 let renderer, camera, light, reticle, scene;
@@ -22,6 +20,14 @@ let xrSession;
 let xrRefSpace;
 let xrViewerSpace;
 let xrHitTestSource;
+
+// overlay
+let overlayElement = document.createElement("div");
+overlayElement.id = "overlay";
+overlayElement.style.display = "none";
+overlayElement.innerHTML = `
+<button id="generate-button"></button>
+`;
 
 const startTHREE = async () => {
     const w = window.innerWidth;
@@ -107,7 +113,8 @@ const onRequestSession = () =>
         .then(onStartSession); // TODO: onRequestSessionError...
 
 const onStartSession = (session) => {
-    session.addEventListener('select', onSelect);
+    overlayElement.style.display = "block";
+    // session.addEventListener('select', onSelect);
     // three
     renderer.xr.enabled = true;
     renderer.xr.setReferenceSpaceType("local");
@@ -136,4 +143,5 @@ window.onload = async () => {
     const arButton = new ARButton({ onRequestSession });
     document.body.appendChild(arButton);
     document.body.appendChild(overlayElement);
+    document.getElementById("generate-button").addEventListener("click", onSelect);
 }

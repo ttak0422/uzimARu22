@@ -1,0 +1,15 @@
+#generate-button {
+    border-radius: 50%;
+    border: 0px;
+    outline: 0px;
+    width: 5rem;
+    height: 5rem;
+    background: url(./img/v1.png) center no-repeat;
+    background-size: 100% auto;
+    opacity: 0.8;
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: auto;
+    bottom: 1%;
+}
