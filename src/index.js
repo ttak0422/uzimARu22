@@ -3,12 +3,25 @@ import { ARButton } from "./lib/ar-button";
 import { loadTextureAsync } from "./lib/texture-loader";
 import uzimalSrc from "./img/uzimaru.png";
 
+// overlay
+let overlayElement = document.createElement("div");
+overlayElement.id = "overlay";
+overlayElement.innerHTML = `
+<p>test</p>
+`;
+
 // three
 let renderer, camera, light, reticle, scene;
 let uzimalMesh;
 const uzimalHeight = 0.1;
 let objects = [];
 const MAX_OBJECT = 10;
+
+// xr session
+let xrSession;
+let xrRefSpace;
+let xrViewerSpace;
+let xrHitTestSource;
 
 const startTHREE = async () => {
     const w = window.innerWidth;
@@ -39,7 +52,7 @@ const startTHREE = async () => {
     const uzimalGeometry = new THREE.PlaneGeometry(uzimalWidth, uzimalHeight);
     const uzimalMaterial = new THREE.MeshBasicMaterial({
         map: uzimalTexture,
-        transparent: true, 
+        transparent: true,
         side: THREE.DoubleSide,
     });
     uzimalMesh = new THREE.Mesh(uzimalGeometry, uzimalMaterial);
@@ -84,17 +97,14 @@ const generateObject = () => {
     }
 }
 
-// xr session
-let xrSession;
-let xrRefSpace;
-let xrViewerSpace;
-let xrHitTestSource;
 const onRequestSession = () =>
     navigator.xr.requestSession(
         "immersive-ar", {
         requiredFeatures: ["local", "hit-test"],
-    }
-    ).then(onStartSession); // TODO: onRequestSessionError...
+        optionalFeatures: ["dom-overlay"],
+        domOverlay: { root: document.getElementById("overlay") }
+    })
+        .then(onStartSession); // TODO: onRequestSessionError...
 
 const onStartSession = (session) => {
     session.addEventListener('select', onSelect);
@@ -125,4 +135,5 @@ window.onload = async () => {
     await startTHREE();
     const arButton = new ARButton({ onRequestSession });
     document.body.appendChild(arButton);
+    document.body.appendChild(overlayElement);
 }
