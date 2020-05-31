@@ -34,6 +34,7 @@ class ARButton extends HTMLElement {
         this._buttonElem.appendChild(this._textElem);
         this._buttonElem.onclick = () => {
             if(this.status === Status.Ready) {
+                console.log("ar-button clicked");
                 onRequestSession();
                 // TODO: onRequestSessionでsessionに入らなかった時のサポート
                 this.status = Status.Running;
@@ -56,14 +57,17 @@ class ARButton extends HTMLElement {
                 .then((supported)=> {
                     if(supported) {
                         this.status = Status.Ready;
+                        console.log("supported");
                         this.updateView();
                     } else {
                         this.status = Status.NotSupported;
+                        console.log("not supported");
                         this.updateView();
                     }
                 });
         } else {
             this.status = Status.NotSupported;
+            console.log("not supported");
             this.updateView();
         }
     }
