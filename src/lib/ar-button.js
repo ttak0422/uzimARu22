@@ -33,13 +33,9 @@ class ARButton extends HTMLElement {
         this._textElem = document.createElement("text");
         this._buttonElem.appendChild(this._textElem);
         this._buttonElem.onclick = () => {
-            if(this.status === Status.Ready) {
-                console.log("ar-button clicked");
-                onRequestSession();
-                // TODO: onRequestSessionでsessionに入らなかった時のサポート
-                this.status = Status.Running;
-                this.updateView();
-            }
+            onRequestSession();
+            this.status = Status.Running;
+            this.updateView();
         }
         shadowDOM.appendChild(this._buttonElem);
         if(buttonStyle.trim() !== "") {
