@@ -10,6 +10,9 @@ let renderer, camera, light, reticle, scene;
 let object;
 const objectSize = 0.1;
 let objects = [];
+let camPos = new THREE.Vector3();
+let camQuat = new THREE.Quaternion();
+let camScale = new THREE.Vector3();
 const MAX_OBJECT = 10;
 
 // xr session
@@ -109,8 +112,10 @@ const onSelect = () => {
 
 const generateObject = () => {
     console.log("generateObject");
+    camera.matrixWorld.decompose(camPos, camQuat, camScale);
     let obj = object.clone();
     obj.position.set(reticle.position.x, reticle.position.y, reticle.position.z);
+    obj.lookAt(camPos.x, reticle.position.y, camPos.z);
     objects.push(obj);
     scene.add(obj);
     if (objects.length > MAX_OBJECT) {
