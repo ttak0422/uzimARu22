@@ -23,23 +23,19 @@ class ARButton extends HTMLElement {
         const shadowDOM = this.attachShadow({mode:"open"})
         const options = opt || {};
         const buttonStyle = options.buttonStyle || DefaultOptions.buttonStyle;
-        const textStyle = options.buttonStyle || DefaultOptions.textStyle;
+        const textStyle = options.textStyle || DefaultOptions.textStyle;
         const buttonText = options.buttonText || DefaultOptions.buttonText;
         const onRequestSession = options.onRequestSession || DefaultOptions.onRequestSession;
         const onEndSession = options.onRequestSession || DefaultOptions.onEndSession;
         this._status = Status.Initializing;
         this._buttonElem = document.createElement("button");
-        this._buttonElem.textContent = buttonText;
         this._textElem = document.createElement("text");
+        this._textElem.textContent = buttonText;
         this._buttonElem.appendChild(this._textElem);
         this._buttonElem.onclick = () => {
-            if(this.status === Status.Ready) {
-                console.log("ar-button clicked");
-                onRequestSession();
-                // TODO: onRequestSessionでsessionに入らなかった時のサポート
-                this.status = Status.Running;
-                this.updateView();
-            }
+            onRequestSession();
+            this.status = Status.Running;
+            this.updateView();
         }
         shadowDOM.appendChild(this._buttonElem);
         if(buttonStyle.trim() !== "") {
