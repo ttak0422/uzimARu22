@@ -1,4 +1,4 @@
-# uzimARu22
+# uzimARu22 ![Node.js CI](https://github.com/ttak0422/uzimARu22/workflows/Node.js%20CI/badge.svg)
 うじまる生誕LT
 
 # About
